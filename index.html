@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CNC Machine Manager | Industrial Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- 侧边栏导航 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">🏭</div>
+                <div class="logo-text">CNC Manager</div>
+                <div class="logo-badge">v1.0</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" data-view="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-view="machines">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Machine Park</span>
+                </div>
+                <div class="nav-item" data-view="add">
+                    <span class="nav-icon">➕</span>
+                    <span>Register Machine</span>
+                </div>
+                <div class="nav-item" data-view="critical">
+                    <span class="nav-icon">⚠️</span>
+                    <span>Critical Units</span>
+                </div>
+            </nav>
+            
+            <div class="stats-card">
+                <div class="stat-item">
+                    <div class="stat-label">Total Machines</div>
+                    <div class="stat-value" id="totalMachines">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Running</div>
+                    <div class="stat-value running" id="runningCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Critical</div>
+                    <div class="stat-value critical" id="criticalCount">0</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- Dashboard 视图 -->
+            <div id="dashboardView" class="view active">
+                <div class="view-header">
+                    <h1>Production Dashboard</h1>
+                    <p>Real-time machine status overview</p>
+                </div>
+                
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🏭</div>
+                        <div class="kpi-info">
+                            <div class="kpi-value" id="kpiTotal">0</div>
+                            <div class="kpi-label">Total Machines</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🟢</div>
+                        <div class="kpi-info">
+                            <div class="kpi-value" id="kpiRunning">0</div>
+                            <div class="kpi-label">Running</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🟡</div>
+                        <div class="kpi-info">
+                            <div class="kpi-value" id="kpiIdle">0</div>
+                            <div class="kpi-label">Idle</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🔧</div>
+                        <div class="kpi-info">
+                            <div class="kpi-value" id="kpiMaintenance">0</div>
+                            <div class="kpi-label">Maintenance</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⚫</div>
+                        <div class="kpi-info">
+                            <div class="kpi-value" id="kpiOffline">0</div>
+                            <div class="kpi-label">Offline</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⚠️</div>
+                        <div class="kpi-info">
+                            <div class="kpi-value" id="kpiCritical">0</div>
+                            <div class="kpi-label">Critical Units</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-section">
+                    <h2>Recent Activity</h2>
+                    <div id="recentActivity" class="activity-log"></div>
+                </div>
+            </div>
+
+            <!-- Machine Park 视图（显示所有机器） -->
+            <div id="machinesView" class="view">
+                <div class="view-header">
+                    <h1>Machine Park</h1>
+                    <p>All registered CNC machines</p>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by machine name...">
+                    <button id="searchBtn" class="btn btn-secondary">🔍 Search</button>
+                    <button id="resetSearchBtn" class="btn btn-outline">Reset</button>
+                </div>
+                
+                <div id="machinesList" class="machines-grid"></div>
+            </div>
+
+            <!-- Register Machine 视图 -->
+            <div id="addView" class="view">
+                <div class="view-header">
+                    <h1>Register New Machine</h1>
+                    <p>Add a CNC machine to the fleet</p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Machine Name</label>
+                            <input type="text" id="machineName" placeholder="e.g., HAAS VF-2SS">
+                        </div>
+                        <div class="form-group">
+                            <label>Machine Type</label>
+                            <select id="machineType">
+                                <option value="CNC Mill">CNC Mill</option>
+                                <option value="CNC Lathe">CNC Lathe</option>
+                                <option value="CNC Router">CNC Router</option>
+                                <option value="EDM">EDM</option>
+                                <option value="Plasma Cutter">Plasma Cutter</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="status">
+                                <option value="Running">🟢 Running</option>
+                                <option value="Idle">🟡 Idle</option>
+                                <option value="Maintenance">🔧 Maintenance</option>
+                                <option value="Offline">⚫ Offline</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Operator</label>
+                            <input type="text" id="operatorName" placeholder="Assigned operator">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Last Maintenance</label>
+                            <input type="date" id="lastMaintenance">
+                        </div>
+                        <div class="form-group">
+                            <label>Next Maintenance</label>
+                            <input type="date" id="nextMaintenance">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Efficiency (%)</label>
+                            <input type="number" id="efficiency" min="0" max="100" value="85">
+                        </div>
+                        <div class="form-group">
+                            <label>Critical Machine</label>
+                            <select id="isCritical">
+                                <option value="No">No</option>
+                                <option value="Yes">⚠️ Yes - Critical</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label>Notes</label>
+                            <input type="text" id="notes" placeholder="Additional information...">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button id="addBtn" class="btn btn-primary">➕ Register Machine</button>
+                        <button id="updateBtn" class="btn btn-warning">✏️ Update Machine</button>
+                        <button id="clearFormBtn" class="btn btn-outline">Clear Form</button>
+                    </div>
+                </div>
+
+                <!-- 删除区域 -->
+                <div class="delete-section">
+                    <h3>Delete Machine</h3>
+                    <div class="delete-row">
+                        <input type="text" id="deleteInput" placeholder="Enter machine name to delete">
+                        <button id="deleteBtn" class="btn btn-danger">🗑️ Delete Machine</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critical Units 视图 -->
+            <div id="criticalView" class="view">
+                <div class="view-header">
+                    <h1>⚠️ Critical Machines</h1>
+                    <p>High-priority units requiring attention</p>
+                </div>
+                <div id="criticalList" class="machines-grid"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast 消息 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
