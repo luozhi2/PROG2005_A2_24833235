@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Inventory Management System | Industrial</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- 侧边栏导航 -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">📦</div>
+                <div class="logo-text">Inventory Pro</div>
+                <div class="logo-badge">v1.0</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" data-view="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-view="inventory">
+                    <span class="nav-icon">📋</span>
+                    <span>Inventory</span>
+                </div>
+                <div class="nav-item" data-view="add">
+                    <span class="nav-icon">➕</span>
+                    <span>Add Item</span>
+                </div>
+                <div class="nav-item" data-view="popular">
+                    <span class="nav-icon">⭐</span>
+                    <span>Popular Items</span>
+                </div>
+            </nav>
+            
+            <div class="stats-card">
+                <div class="stat-item">
+                    <div class="stat-label">Total Items</div>
+                    <div class="stat-value" id="totalItems">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">In Stock</div>
+                    <div class="stat-value running" id="inStockCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Popular</div>
+                    <div class="stat-value critical" id="popularCount">0</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- Dashboard 视图 -->
+            <div id="dashboardView" class="view active">
+                <div class="view-header">
+                    <h1>Inventory Dashboard</h1>
+                    <p>Real-time inventory status overview</p>
+                </div>
+                
+                <div class="kpi-grid">
+                    <div class="kpi-card"><div class="kpi-icon">📦</div><div class="kpi-info"><div class="kpi-value" id="kpiTotal">0</div><div class="kpi-label">Total Items</div></div></div>
+                    <div class="kpi-card"><div class="kpi-icon">🟢</div><div class="kpi-info"><div class="kpi-value" id="kpiInStock">0</div><div class="kpi-label">In Stock</div></div></div>
+                    <div class="kpi-card"><div class="kpi-icon">🟡</div><div class="kpi-info"><div class="kpi-value" id="kpiLowStock">0</div><div class="kpi-label">Low Stock</div></div></div>
+                    <div class="kpi-card"><div class="kpi-icon">⚫</div><div class="kpi-info"><div class="kpi-value" id="kpiOutStock">0</div><div class="kpi-label">Out of Stock</div></div></div>
+                    <div class="kpi-card"><div class="kpi-icon">⭐</div><div class="kpi-info"><div class="kpi-value" id="kpiPopular">0</div><div class="kpi-label">Popular Items</div></div></div>
+                </div>
+
+                <div class="recent-section">
+                    <h2>Recent Activity</h2>
+                    <div id="recentActivity" class="activity-log"></div>
+                </div>
+            </div>
+
+            <!-- Inventory 视图（显示所有商品） -->
+            <div id="inventoryView" class="view">
+                <div class="view-header">
+                    <h1>Inventory List</h1>
+                    <p>All items in stock</p>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by item name...">
+                    <button id="searchBtn" class="btn btn-secondary">🔍 Search</button>
+                    <button id="resetSearchBtn" class="btn btn-outline">Reset</button>
+                </div>
+                
+                <div id="inventoryList" class="items-grid"></div>
+            </div>
+
+            <!-- Add Item 视图 -->
+            <div id="addView" class="view">
+                <div class="view-header">
+                    <h1>Add / Edit Item</h1>
+                    <p>Manage inventory items</p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item Name *</label>
+                            <input type="text" id="itemName" placeholder="e.g., Gaming Laptop">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="category">
+                                <option value="Electronics">Electronics</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Tools">Tools</option>
+                                <option value="Miscellaneous">Miscellaneous</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Quantity *</label>
+                            <input type="number" id="quantity" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Price ($) *</label>
+                            <input type="number" id="price" min="0" step="0.01" value="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Supplier Name *</label>
+                            <input type="text" id="supplierName" placeholder="e.g., TechDistro Inc.">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Status *</label>
+                            <select id="stockStatus">
+                                <option value="In Stock">🟢 In Stock</option>
+                                <option value="Low Stock">🟡 Low Stock</option>
+                                <option value="Out of Stock">⚫ Out of Stock</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Popular Item *</label>
+                            <select id="popularItem">
+                                <option value="No">No</option>
+                                <option value="Yes">⭐ Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Comment (optional)</label>
+                            <input type="text" id="comment" placeholder="Additional notes...">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button id="addBtn" class="btn btn-primary">➕ Add Item</button>
+                        <button id="updateBtn" class="btn btn-warning">✏️ Update by Name</button>
+                        <button id="clearFormBtn" class="btn btn-outline">Clear Form</button>
+                    </div>
+                </div>
+
+                <!-- 删除区域 -->
+                <div class="delete-section">
+                    <h3>🗑️ Delete Item</h3>
+                    <div class="delete-row">
+                        <input type="text" id="deleteInput" placeholder="Enter item name to delete">
+                        <button id="deleteBtn" class="btn btn-danger">Delete Item</button>
+                    </div>
+                    <p class="delete-warning">⚠️ Warning: Deletion is permanent and cannot be undone!</p>
+                </div>
+            </div>
+
+            <!-- Popular Items 视图 -->
+            <div id="popularView" class="view">
+                <div class="view-header">
+                    <h1>⭐ Popular Items</h1>
+                    <p>Staff picks - best selling products</p>
+                </div>
+                <div id="popularList" class="items-grid"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast 消息 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
