@@ -1,0 +1,39 @@
+<div class="app-container">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">📦</div>
+      <div class="logo-text">Inventory Pro</div>
+      <div class="logo-badge">v2.0</div>
+    </div>
+    
+    <nav class="nav-menu">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📊</span><span>Dashboard</span>
+      </a>
+      <a routerLink="/inventory" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📋</span><span>Inventory</span>
+      </a>
+      <a routerLink="/form" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">➕</span><span>Add/Edit</span>
+      </a>
+      <a routerLink="/popular" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">⭐</span><span>Popular</span>
+      </a>
+      <a routerLink="/privacy" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">🔒</span><span>Security</span>
+      </a>
+      <a routerLink="/faq" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">❓</span><span>Help</span>
+      </a>
+    </nav>
+    
+    <div class="stats-footer">
+      <div class="stat-item"><span>Total Items</span><strong id="footerTotal">0</strong></div>
+      <div class="stat-item"><span>Popular</span><strong id="footerPopular">0</strong></div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
